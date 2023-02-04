@@ -4,7 +4,8 @@ const Message = require('../models/Message');
 exports.newMessage = async (req, res) => {
     try{
         const saveMessage = await req.user.createMessage({
-            message: req.body.message
+            message: req.body.message,
+            name: req.user.name
         })
         console.log(saveMessage);
     }
@@ -17,6 +18,7 @@ exports.newMessage = async (req, res) => {
 exports.getMessages = async (req, res) => {
     try{
         const messages = await Message.findAll();
+        console.log(messages);
         res.status(200).json(messages);
     }
     catch(err){

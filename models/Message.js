@@ -12,6 +12,10 @@ const Message = sequelize.define('Message', {
         type : Sequelize.STRING,
         allowNul : false
     },
+    name : {
+        type : Sequelize.STRING,
+        allowNul: false
+    }
 });
 
 module.exports = Message;

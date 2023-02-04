@@ -12,7 +12,14 @@ messageForm.addEventListener('submit', async (e) => {
 
 document.addEventListener('DOMContentLoaded', async () => {
     let messages = await axios.get('/message/getMessages');
-    const messageBody = document.querySelector('#MessageBody');
-    messages = JSON.stringify(messages);
-    messageBody.innerHTML = messages;
+    const tableBody = document.querySelector('.messageTableBody');
+    const listOfMessages = messages.data;
+    listOfMessages.forEach((message) => {
+        const tableRow = document.createElement('tr');
+        const tableRowData = document.createElement('th')
+        tableRowData.setAttribute('scope', 'row');
+        tableRowData.innerHTML = `${message.name} : ${message.message}`
+        tableBody.appendChild(tableRowData);
+        tableBody.appendChild(tableRow);
+    })
 })
