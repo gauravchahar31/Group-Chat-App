@@ -11,19 +11,30 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 const sequelize = require('./database/connection');
+const User = require('./models/User');
+const Message = require('./models/Message');
+
 const homeRoutes = require('./routes/home');
 const userRoutes = require('./routes/user');
+const messageRoutes = require('./routes/message');
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     if(req.cookies.user){
-        req.user = req.cookies.user;
+        req.user = await User.findOne({
+            where : {
+                jwt : req.cookies.user
+            }
+        });
     }
     next();
 })
 
 app.use('/user', userRoutes);
+app.use('/message', messageRoutes);
 app.use(homeRoutes);
 
+Message.belongsTo(User, {constraints: true, onDelete: 'CASCADE'});
+User.hasMany(Message);
 
 sequelize.sync();
 
