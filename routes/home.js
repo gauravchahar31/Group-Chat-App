@@ -1,12 +1,13 @@
-import {Router} from 'express';
-const router = Router();
+const express = require('express');
+const router = express.Router();
 
-import * as homeController from '../controllers/home';
+const homeController = require('../controllers/home');
 
 router.get('/', homeController.homePage);
 router.get('/login', homeController.loginPage);
 router.get('/signup', homeController.signupPage);
 router.get('/logout', homeController.logout);
 router.get('/forgotPassword', homeController.forgotPassword);
+router.get('/resetPassword/:uuid', homeController.resetPassword);
 
-export default router;
+module.exports = router;
