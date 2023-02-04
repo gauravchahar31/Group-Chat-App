@@ -9,3 +9,10 @@ messageForm.addEventListener('submit', async (e) => {
     });
     console.log(saveMessage);
 })
+
+document.addEventListener('DOMContentLoaded', async () => {
+    let messages = await axios.get('/message/getMessages');
+    const messageBody = document.querySelector('#MessageBody');
+    messages = JSON.stringify(messages);
+    messageBody.innerHTML = messages;
+})

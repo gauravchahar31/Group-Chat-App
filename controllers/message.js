@@ -13,3 +13,14 @@ exports.newMessage = async (req, res) => {
         res.status(400).json(null);
     }
 }
+
+exports.getMessages = async (req, res) => {
+    try{
+        const messages = await Message.findAll();
+        res.status(200).json(messages);
+    }
+    catch(err){
+        console.error(err);
+        res.status(400).json(null);
+    }
+}
