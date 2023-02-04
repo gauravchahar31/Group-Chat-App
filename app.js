@@ -14,6 +14,13 @@ const sequelize = require('./database/connection');
 const homeRoutes = require('./routes/home');
 const userRoutes = require('./routes/user');
 
+app.use((req, res, next) => {
+    if(req.cookies.user){
+        req.user = req.cookies.user;
+    }
+    next();
+})
+
 app.use('/user', userRoutes);
 app.use(homeRoutes);
 

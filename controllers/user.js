@@ -51,7 +51,7 @@ exports.checkUser = async (req, res) => {
     }
     catch(err){
         console.log(err);
-        res.status(400).json(null);
+        res.status(404).json(null);
     }
 }
 
