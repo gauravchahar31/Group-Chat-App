@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/connection');
 
-const User = sequelize.define('User', {
+const Group = sequelize.define('chatGroup', {
     id : {
         type : Sequelize.INTEGER,
         primaryKey : true,
@@ -11,19 +11,7 @@ const User = sequelize.define('User', {
     name : {
         type : Sequelize.STRING,
         allowNul : false
-    },
-    email : {
-        type : Sequelize.STRING,
-        unique : true,
-        allowNul : false
-    },
-    password : {
-        type : Sequelize.STRING,
-        allowNul : false
-    },
-    jwt : {
-        type: Sequelize.STRING,
-    },
+    }
 });
 
-module.exports = User;
+module.exports = Group;

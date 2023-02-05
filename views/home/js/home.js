@@ -1,4 +1,4 @@
-const messageArray = [];
+let messageArray = [];
 const messageForm = document.querySelector('#messageForm');
 
 messageForm.addEventListener('submit', async (e) => {
@@ -10,17 +10,15 @@ messageForm.addEventListener('submit', async (e) => {
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const localMessages = await getLocalStorageMessages();
+    messageArray = await getLocalStorageMessages();
+    getMessagesOnScreen(messageArray);
     setInterval(() => {
         updateMessages();
     }, 1000)
 })
 
-
-
 async function updateMessages(){
     const lengthOfArray = messageArray.length;
-    console.log(lengthOfArray);
     let lastMessage;
     if(lengthOfArray != 0){
         lastMessage = messageArray[lengthOfArray-1].id;
@@ -43,9 +41,9 @@ async function getMessagesOnScreen (newMessages){
     })
 }
 
-function getLocalStorageMessages(){
+async function getLocalStorageMessages(){
     if(localStorage.messages){
-        return JSON.parse(localStorage.messages);
+        return await JSON.parse(localStorage.messages);
     }
 }
 

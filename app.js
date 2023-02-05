@@ -13,6 +13,7 @@ app.use(cookieParser());
 const sequelize = require('./database/connection');
 const User = require('./models/User');
 const Message = require('./models/Message');
+const Group = require('./models/Group');
 
 const homeRoutes = require('./routes/home');
 const userRoutes = require('./routes/user');
@@ -33,8 +34,11 @@ app.use('/user', userRoutes);
 app.use('/message', messageRoutes);
 app.use(homeRoutes);
 
+Group.belongsToMany(User, {through: 'GroupUsers'});
+User.belongsToMany(Group, {through: 'GroupUsers'})
+
+Message.belongsTo(Group, {constraints: true, onDelete: 'CASCADE'});
 Message.belongsTo(User, {constraints: true, onDelete: 'CASCADE'});
-User.hasMany(Message);
 
 sequelize.sync();
 
