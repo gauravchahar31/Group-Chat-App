@@ -1,4 +1,5 @@
 const sequelize = require('../database/connection');
+const { Op } = require("sequelize");
 const Message = require('../models/Message');
 
 exports.newMessage = async (req, res) => {
@@ -16,8 +17,24 @@ exports.newMessage = async (req, res) => {
 
 exports.getMessages = async (req, res) => {
     try{
-        const messages = await Message.findAll();
-        res.status(200).json(messages);
+        console.log(req.params.lastMessage);
+        if(req.params.lastMessage == 0){
+            const messages = await Message.findAll({
+                order: [[ 'createdAt', 'DESC' ]],
+                limit: 2
+            });
+            res.status(200).json(messages);
+        }
+        else{
+            const messages = await Message.findAll({
+                where: {
+                    id: {
+                        [Op.gt]: req.params.lastMessage
+                    }
+                }
+            });
+            res.status(200).json(messages);
+        }
     }
     catch(err){
         console.error(err);
