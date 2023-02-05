@@ -7,7 +7,6 @@ exports.newMessage = async (req, res) => {
             message: req.body.message,
             name: req.user.name
         })
-        console.log(saveMessage);
     }
     catch(err){
         console.error(err);
@@ -18,7 +17,6 @@ exports.newMessage = async (req, res) => {
 exports.getMessages = async (req, res) => {
     try{
         const messages = await Message.findAll();
-        console.log(messages);
         res.status(200).json(messages);
     }
     catch(err){

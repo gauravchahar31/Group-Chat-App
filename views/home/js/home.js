@@ -2,17 +2,23 @@ const messageForm = document.querySelector('#messageForm');
 
 messageForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const message = document.querySelector('#userMessage').value;
-    console.log(message);
+    const messageBox = document.querySelector('#userMessage');
     const saveMessage = await axios.post('/message/newMessage', {
-        message : message
+        message : messageBox.value
     });
-    console.log(saveMessage);
+    messageBox.value = '';
 })
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
+   setInterval(() => {
+    getMessagesOnScreen();
+}, 1000)
+})
+
+async function getMessagesOnScreen (){
     let messages = await axios.get('/message/getMessages');
     const tableBody = document.querySelector('.messageTableBody');
+    tableBody.innerHTML = '';
     const listOfMessages = messages.data;
     listOfMessages.forEach((message) => {
         const tableRow = document.createElement('tr');
@@ -22,4 +28,4 @@ document.addEventListener('DOMContentLoaded', async () => {
         tableBody.appendChild(tableRowData);
         tableBody.appendChild(tableRow);
     })
-})
+}
