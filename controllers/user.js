@@ -1,10 +1,28 @@
 const sequelize = require('../database/connection');
+const { Op } = require("sequelize");
 const User = require('../models/User');
 const ForgetPasswordRequest = require('../models/ForgetPasswordRequest');
 const passwordEncryption = require('../util/encryptPassword');
 const jwtToken = require('../util/jwtToken');
 const mailSystem = require('../util/mails');
 const {v4 : uuidv4} = require('uuid');
+
+exports.getUsers = async (req, res) => {
+    try{
+        const usersList = await User.findAll({
+            where: {
+                id: {
+                    [Op.not]: req.user.id
+                }
+            }
+        });
+        res.status(200).json(usersList);
+    }
+    catch(err){
+        console.error(err);
+        res.status(400).json(null);
+    }
+}
 
 exports.createNewUser = async (req, res) => {
     try{

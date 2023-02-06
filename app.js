@@ -18,6 +18,7 @@ const Group = require('./models/Group');
 const homeRoutes = require('./routes/home');
 const userRoutes = require('./routes/user');
 const messageRoutes = require('./routes/message');
+const groupRoutes = require('./routes/group');
 
 app.use(async (req, res, next) => {
     if(req.cookies.user){
@@ -32,6 +33,7 @@ app.use(async (req, res, next) => {
 
 app.use('/user', userRoutes);
 app.use('/message', messageRoutes);
+app.use('/group', groupRoutes);
 app.use(homeRoutes);
 
 Group.belongsToMany(User, {through: 'GroupUsers'});
@@ -39,6 +41,8 @@ User.belongsToMany(Group, {through: 'GroupUsers'})
 
 Message.belongsTo(Group, {constraints: true, onDelete: 'CASCADE'});
 Message.belongsTo(User, {constraints: true, onDelete: 'CASCADE'});
+User.hasMany(Message);
+Group.hasMany(Message);
 
 sequelize.sync();
 
