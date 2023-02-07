@@ -1,69 +1,3 @@
-// let messageArray = [];
-// const messageForm = document.querySelector('#messageForm');
-
-// messageForm.addEventListener('submit', async (e) => {
-//     e.preventDefault();
-//     const messageBox = document.querySelector('#userMessage');
-//     const saveMessage = await axios.post('/message/newMessage', {
-//         message : messageBox.value
-//     })
-// })
-
-// document.addEventListener('DOMContentLoaded', async () => {
-//     messageArray = await getLocalStorageMessages();
-//     getMessagesOnScreen(messageArray);
-//     // setInterval(() => {
-//     //     updateMessages();
-//     // }, 1000)
-// })
-
-// async function updateMessages(){
-//     const lengthOfArray = messageArray.length;
-//     let lastMessage;
-//     if(lengthOfArray != 0){
-//         lastMessage = messageArray[lengthOfArray-1].id;
-//     }
-//     const newMessages = await axios.get(`/message/getMessages/${lastMessage}`);
-//     getMessagesOnScreen(newMessages.data);
-//     updateLocalStorageMessages(newMessages.data);
-// }
-
-
-// async function getMessagesOnScreen (newMessages){
-//     const tableBody = document.querySelector('.messageTableBody');
-//     newMessages.forEach((message) => {
-//         const tableRow = document.createElement('tr');
-//         const tableRowData = document.createElement('th')
-//         tableRowData.setAttribute('scope', 'row');
-//         tableRowData.innerHTML = `${message.name} : ${message.message}`
-//         tableBody.appendChild(tableRowData);
-//         tableBody.appendChild(tableRow);
-//     })
-// }
-
-// async function getLocalStorageMessages(){
-//     if(localStorage.messages){
-//         return await JSON.parse(localStorage.messages);
-//     }
-// }
-
-// function updateLocalStorageMessages(newMessages){
-//     const lengthOfnewMessages = newMessages.length;
-//     if(lengthOfnewMessages > 10){
-//         newMessages.splice(0, lengthOfnewMessages - 10);
-//         newMessages.forEach((message) => {
-//             messageArray.push(message);
-//         });
-//     }
-//     else{
-//         messageArray.splice(0, lengthOfnewMessages);
-//         newMessages.forEach((message) => {
-//             messageArray.push(message);
-//         });
-//     }
-//     localStorage.messages = JSON.stringify(messageArray);
-// }
-
 const intervalArray = [];
 
 //FETCH ALL JOINED GROUPS ON DOCUMENT LOAD
@@ -148,7 +82,20 @@ async function addGroupToSideBar(group){
 
 //DISPLAY GROUP NAME ON CLICK
 async function showGroup(id, name){
-    document.querySelector('.groupChat').innerHTML = `<h2>${name}<h2><hr>`;
+    const groupChatHeader = document.querySelector('.groupChat');
+    groupChatHeader.innerHTML = '';
+    const groupNameH2 = document.createElement('h2');
+    groupNameH2.innerHTML = name;
+    if(true){
+        const adminBtn = document.createElement('button');
+        adminBtn.setAttribute('class', 'btn btn-primary');
+        adminBtn.setAttribute('style', 'display: inline');
+        adminBtn.innerHTML = 'Edit Group';
+        groupNameH2.appendChild(adminBtn);
+    }
+    groupChatHeader.appendChild(groupNameH2);
+    const horizontalLine = document.createElement('hr');
+    groupChatHeader.appendChild(horizontalLine);
     document.querySelector('.welcomeMessage').setAttribute('style', 'display: none');
     const groupMessagesBox = document.querySelector('.groupMessagesBox');
     groupMessagesBox.innerHTML = '';
