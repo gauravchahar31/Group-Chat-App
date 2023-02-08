@@ -1,6 +1,7 @@
 const sequelize = require('../database/connection');
 const { Op } = require("sequelize");
 const Message = require('../models/Message');
+const awsS3 = require('../util/aws');
 
 exports.getMessages = async (req, res) => {
     try{
@@ -68,5 +69,55 @@ exports.newGroupMessage =  async(req, res) => {
     }
     catch(err){
         console.log(err);
+        res.status(500).json(null);
+    }
+}
+
+exports.saveFile = async (req, res) => {
+    try{
+        console.log(req.body);
+        // const file = req.body.file[0];
+        // const fileName = `file${req.user.id}${new Date()}`;
+        // const fileURL = await saveFileToS3(file, fileName);
+        // console.log(fileURL);
+        // res.status(200).send(fileURL);
+
+        // await req.user.createMessage({
+        //     name: req.user.name,
+        //     message: fileURL,
+        //     chatGroupId: req.body.groupId
+        // });
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json(null);
+    }
+}
+
+const saveFileToS3 = async (data, fileName) => {
+    try{
+        return new Promise ((resolve, reject) => {
+            awsS3.createBucket(() => {
+                const params = {
+                    Bucket : 'expensetracker-reports',
+                    Key : fileName,
+                    Body : data,
+                    ACL: 'public-read'
+                }
+                awsS3.upload(params, (err, response) => {
+                    if(err){
+                        console.log(err);
+                        reject(err);
+                    }else{
+                        console.log(response);
+                        resolve(response.Location);
+                    }
+                })
+            });
+        })
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json(null);
     }
 }

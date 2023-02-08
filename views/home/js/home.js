@@ -135,9 +135,15 @@ document.querySelector('#sendMessage').addEventListener('click', async () => {
     document.querySelector('#userMessage').value = '';
 })
 
-document.querySelector('#sendAttachment').addEventListener('change', async () => {
-    // const groupId = document.querySelector('#currentGroupId').value;
-    // alert('file sent');
+const fileInput = document.querySelector('#sendAttachment');
+fileInput.addEventListener('change', async () => {
+    const groupId = document.querySelector('#currentGroupId').value;
+    const selectedFile = fileInput.files[0];
+    console.log(selectedFile);
+    await axios.post('/message/saveFile', {
+        file: selectedFile,
+        chatGroupId: groupId
+    })
 })
 
 // FETCHES MESSAGES AND ADDS TO CHAT SCREEN

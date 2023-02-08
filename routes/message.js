@@ -7,5 +7,6 @@ router.get('/getMessages', messageController.getMessages);
 router.get('/lastMessage', messageController.getlastMessage);
 router.get('/getGroupMessages/:groupId', messageController.getGroupMessages);
 router.post('/newGroupMessage', messageController.newGroupMessage);
+router.post('/saveFile', messageController.saveFile);
 
 module.exports = router;
