@@ -95,10 +95,10 @@ async function showGroup(id, name){
     if(checkGroupAdmin.data){
         const adminBtn = document.createElement('button');
         adminBtn.setAttribute('class', 'btn btn-primary');
-        adminBtn.setAttribute('style', 'display: inline');
+        adminBtn.setAttribute('style', 'display: inline; margin-left: 10px; background-color: #913175; border-color: #CD5888;');
         adminBtn.setAttribute('data-target', '#adminControls');
         adminBtn.setAttribute('data-toggle', 'modal');
-        adminBtn.innerHTML = 'Edit Group';
+        adminBtn.innerHTML = 'Manage Members';
         groupNameH2.appendChild(adminBtn);
 
         adminBtn.addEventListener('click', () => {
@@ -132,7 +132,12 @@ document.querySelector('#sendMessage').addEventListener('click', async () => {
         message: message,
         chatGroupId: groupId
     })
-    document.querySelector('#userMessage').innerHTML = '';
+    document.querySelector('#userMessage').value = '';
+})
+
+document.querySelector('#sendAttachment').addEventListener('change', async () => {
+    // const groupId = document.querySelector('#currentGroupId').value;
+    // alert('file sent');
 })
 
 // FETCHES MESSAGES AND ADDS TO CHAT SCREEN

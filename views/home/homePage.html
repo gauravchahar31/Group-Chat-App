@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <!-- style="background-color: #20262E;" -->
-<body>
+<body style="background-color: #EDDBC7;">
     <nav class="navbar navbar-light bg-dark">
         <a style="color: #E9E8E8;" class="navbar-brand" href="#">
             <img src="/assets/logo.jpeg" width="30" height="30" class="d-inline-block align-top" alt="">
@@ -29,9 +29,9 @@
       <div class="row no-gutters">
         <div class="col-md-4 border-right">
           <div class="settings-tray">
-            <button id="newGroupBtn" class="btn btn-primary" data-target="#createNewGroupBtn" data-toggle="modal">Create New Group</button>
+            <button id="newGroupBtn" style="background-color: #913175; border-color: #CD5888;" class="btn btn-primary" data-target="#createNewGroupBtn" data-toggle="modal">New Group<i style="margin-left: 1px;" class="material-icons" id="">group</i></button>
           </div><hr>
-          <div class="groupContainer">
+          <div class="groupContainer" style="overflow: auto; height:600px;">
             
           </div>
         </div>
@@ -43,7 +43,7 @@
               <h1>Create a new Group or click on existing one to start Chatting..</h1><br>
             </div>
             <div class="chatPanel" style="margin-left: 10px; display: none;">
-              <div class="groupMessagesBox" style="overflow-y: scroll; height:400px;">
+              <div class="groupMessagesBox" style="overflow-y: scroll; height:600px;">
                 
               </div>
               <div class="row">
@@ -51,8 +51,9 @@
                   <form class="form-inline newMessageForm">
                     <input type="text" class="form-control" id="userMessage" placeholder="Type your message here...">
                     <input type="hidden" id="currentGroupId" value="">
-                    <i style="margin-left: 10px;" class="material-icons btn btn-primary" id="">attachment</i>
-                    <i style="margin-left: 10px;" class="material-icons btn btn-primary" id="sendMessage">send</i>
+                    <label for="sendAttachment"><i style="margin-left: 10px; background-color: #913175; border-color: #CD5888;" class="material-icons btn btn-primary">attachment</i></label>
+                    <i style="margin-left: 10px; background-color: #913175; border-color: #CD5888;" class="material-icons btn btn-primary" id="sendMessage">send</i>
+                    <input id="sendAttachment" style="visibility:hidden;" type="file">
                   </form>
                 </div>
               </div>
@@ -92,6 +93,11 @@
           </div>
         </div>
       </div>
+
+      <footer class="text-center text-white fixed-bottom" style="background-color: #21081a;">
+        <div class="text-center p-3" style="background-color: #20262E">
+        </div>
+      </footer>
 
       <div class="modal fade" id="adminControls" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
