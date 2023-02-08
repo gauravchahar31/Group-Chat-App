@@ -24,6 +24,8 @@ const User = sequelize.define('User', {
     jwt : {
         type: Sequelize.STRING,
     },
+}, {
+    timestamps: false
 });
 
 module.exports = User;

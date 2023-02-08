@@ -1,21 +1,22 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/connection');
 
-const ForgetPasswordRequest = sequelize.define('ForgetPasswordRequest', {
+const Admin = sequelize.define('Admin', {
     id : {
         type : Sequelize.INTEGER,
         primaryKey : true,
         autoIncrement : true,
+    },
+    chatGroupId : {
+        type : Sequelize.INTEGER,
         allowNul : false
     },
-    uuid : {
-        type : Sequelize.STRING
-    },
-    isActive : {
-        type: Sequelize.BOOLEAN
+    userId : {
+        type: Sequelize.INTEGER,
+        allowNul : false
     }
 }, {
     timestamps: false
 });
 
-module.exports = ForgetPasswordRequest;
+module.exports = Admin;
