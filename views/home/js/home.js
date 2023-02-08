@@ -180,13 +180,12 @@ async function fetchMessages(id, groupMessagesBox){
         lastMessageId = messages[messages.length-1].id;
     }
     fetchNewMessages(id, lastMessageId, groupMessagesBox, userId);
-    // const timeInterval = setInterval()
 }
 
 async function fetchNewMessages(id, lastMessageId, groupMessagesBox, userId){
-    // const interval = setInterval(() => {
-    //     updateMessageList();
-    // }, 1000);
+    const interval = setInterval(() => {
+        updateMessageList();
+    }, 1000);
     intervalArray.push(interval);
     if(!lastMessageId){
         lastMessageId = 0;
