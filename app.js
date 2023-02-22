@@ -57,4 +57,4 @@ Group.hasMany(Message);
 
 sequelize.sync();
 
-server.listen(8080);
+server.listen(process.env.PORT);
