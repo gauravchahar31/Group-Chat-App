@@ -57,4 +57,4 @@ Group.hasMany(Message);
 
 sequelize.sync();
 
-server.listen(3000);
+server.listen(8080);
