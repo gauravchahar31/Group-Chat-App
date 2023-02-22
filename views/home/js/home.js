@@ -1,11 +1,7 @@
 import {io} from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io('/');
 
-var lastMessageId = 0;
-let userId;
-let id;
-const groupMessagesBox = document.querySelector('.groupMessagesBox');
-
+let lastMessageId = 0;
 
 //FETCH ALL JOINED GROUPS ON DOCUMENT LOAD
 document.addEventListener('DOMContentLoaded', async (e) =>{
@@ -82,7 +78,6 @@ async function addGroupToSideBar(group){
     groupContainer.appendChild(userGroup);
 
     groupName.addEventListener('click', () => {
-        id = group.id;
         showGroup(group.id, group.name);
     })
 }
@@ -125,7 +120,7 @@ async function createGroupChatScreen(id){
     chatPanel.setAttribute('style', 'margin-left: 10px; display: block;') 
     const formGroupId=  document.querySelector('#currentGroupId');
     formGroupId.value = id;
-    fetchMessages(id, groupMessagesBox);
+    fetchMessages(id);
 }
 
 document.querySelector('#sendMessage').addEventListener('click', async () => {
@@ -151,9 +146,10 @@ fileInput.addEventListener('change', async () => {
 })
 
 // FETCHES MESSAGES AND ADDS TO CHAT SCREEN
-async function fetchMessages(id, groupMessagesBox){
+async function fetchMessages(id){
+    const groupMessagesBox = document.querySelector('.groupMessagesBox');
     let messages = await axios.get(`/message/getGroupMessages/${id}`);
-    userId = messages.data.user;
+    const userId = messages.data.user;
     messages = messages.data.groupMessages;
 
     messages.forEach( message => {
@@ -181,22 +177,17 @@ async function fetchMessages(id, groupMessagesBox){
 
     if(messages[messages.length-1]){
         lastMessageId = parseInt(messages[messages.length-1].id);
-        console.log(lastMessageId);
     }
+
+    socket.on('receive-message', async (group) => {
+        if(group == id){
+            console.log(lastMessageId);
+            fetchNewMessages(id, groupMessagesBox, userId);
+        }
+    })
 }
 
-socket.on('receive-message', async (group) => {
-    if(group == id){
-        console.log(lastMessageId);
-        fetchNewMessages(id, lastMessageId, groupMessagesBox, userId);
-    }
-})
-
-async function fetchNewMessages(id, lastMessageId, groupMessagesBox, userId){
-    if(!lastMessageId){
-        lastMessageId = 0;
-    }
-
+async function fetchNewMessages(id, groupMessagesBox, userId){
     let newMessages = await axios.get(`/message/getMessages?groupId=${id}&lastMessage=${lastMessageId}`);
     newMessages = newMessages.data;
 
