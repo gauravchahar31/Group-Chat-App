@@ -1,4 +1,11 @@
-const intervalArray = [];
+import {io} from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+const socket = io('/');
+
+var lastMessageId = 0;
+let userId;
+let id;
+const groupMessagesBox = document.querySelector('.groupMessagesBox');
+
 
 //FETCH ALL JOINED GROUPS ON DOCUMENT LOAD
 document.addEventListener('DOMContentLoaded', async (e) =>{
@@ -75,10 +82,7 @@ async function addGroupToSideBar(group){
     groupContainer.appendChild(userGroup);
 
     groupName.addEventListener('click', () => {
-        for(let i=intervalArray.length-1; i>=0; i--){
-            clearInterval(intervalArray[i]);
-            intervalArray.pop();
-        }
+        id = group.id;
         showGroup(group.id, group.name);
     })
 }
@@ -121,7 +125,6 @@ async function createGroupChatScreen(id){
     chatPanel.setAttribute('style', 'margin-left: 10px; display: block;') 
     const formGroupId=  document.querySelector('#currentGroupId');
     formGroupId.value = id;
-    const groupMessagesBox = document.querySelector('.groupMessagesBox');
     fetchMessages(id, groupMessagesBox);
 }
 
@@ -132,6 +135,7 @@ document.querySelector('#sendMessage').addEventListener('click', async () => {
         message: message,
         chatGroupId: groupId
     })
+    socket.emit('send-message', groupId);
     document.querySelector('#userMessage').value = '';
 })
 
@@ -149,7 +153,7 @@ fileInput.addEventListener('change', async () => {
 // FETCHES MESSAGES AND ADDS TO CHAT SCREEN
 async function fetchMessages(id, groupMessagesBox){
     let messages = await axios.get(`/message/getGroupMessages/${id}`);
-    const userId = messages.data.user;
+    userId = messages.data.user;
     messages = messages.data.groupMessages;
 
     messages.forEach( message => {
@@ -175,53 +179,55 @@ async function fetchMessages(id, groupMessagesBox){
         groupMessagesBox.appendChild(row);
     });
 
-    let lastMessageId;
     if(messages[messages.length-1]){
-        lastMessageId = messages[messages.length-1].id;
+        lastMessageId = parseInt(messages[messages.length-1].id);
+        console.log(lastMessageId);
     }
-    fetchNewMessages(id, lastMessageId, groupMessagesBox, userId);
 }
 
+socket.on('receive-message', async (group) => {
+    if(group == id){
+        console.log(lastMessageId);
+        fetchNewMessages(id, lastMessageId, groupMessagesBox, userId);
+    }
+})
+
 async function fetchNewMessages(id, lastMessageId, groupMessagesBox, userId){
-    const interval = setInterval(() => {
-        updateMessageList();
-    }, 1000);
-    intervalArray.push(interval);
     if(!lastMessageId){
         lastMessageId = 0;
     }
-    async function updateMessageList(){
-        let newMessages = await axios.get(`/message/getMessages?groupId=${id}&lastMessage=${lastMessageId}`);
-        newMessages = newMessages.data;
 
-        if(newMessages[0]){
-            lastMessageId = newMessages[newMessages.length-1].id;
-            await newMessages.forEach(message => {
-                const row = document.createElement('div');
-                row.setAttribute('class', 'row no-gutters');
+    let newMessages = await axios.get(`/message/getMessages?groupId=${id}&lastMessage=${lastMessageId}`);
+    newMessages = newMessages.data;
 
-                const col = document.createElement('div');
-                const messageBody = document.createElement('div');
+    if(newMessages[0]){
+        await newMessages.forEach(message => {
+            const row = document.createElement('div');
+            row.setAttribute('class', 'row no-gutters');
 
-                if(message.UserId == userId){
-                    col.setAttribute('class', 'col-md-7 offset-md-9');
-                    messageBody.setAttribute('class', 'chat-bubble chat-bubble--right');
-                    messageBody.innerHTML = `<b>You</b> : ${message.message}`;
-                }
-                else{
-                    col.setAttribute('class','col-md-7');
-                    messageBody.setAttribute('class', 'chat-bubble chat-bubble--left');
-                    messageBody.innerHTML = `<b>${message.name}</b> : ${message.message}`;
-                }
-                
-                row.appendChild(col);
-                col.appendChild(messageBody);
-                groupMessagesBox.appendChild(row);
-            })
-        }
+            const col = document.createElement('div');
+            const messageBody = document.createElement('div');
+
+            if(message.UserId == userId){
+                col.setAttribute('class', 'col-md-7 offset-md-9');
+                messageBody.setAttribute('class', 'chat-bubble chat-bubble--right');
+                messageBody.innerHTML = `<b>You</b> : ${message.message}`;
+            }
+            else{
+                col.setAttribute('class','col-md-7');
+                messageBody.setAttribute('class', 'chat-bubble chat-bubble--left');
+                messageBody.innerHTML = `<b>${message.name}</b> : ${message.message}`;
+            }
+            
+            row.appendChild(col);
+            col.appendChild(messageBody);
+            groupMessagesBox.appendChild(row);
+        })
+        lastMessageId = newMessages[newMessages.length-1].id;
     }
 }
 
+//SHOWS GROUP PATICIPANTS IN MODAL OF ADMIN
 async function showGroupParticipants(id){
     const tableBody = document.querySelector('.groupParticipants');
     tableBody.innerHTML = '';
@@ -238,8 +244,6 @@ async function showGroupParticipants(id){
         const column1 = document.createElement('td');
         const column2 = document.createElement('td');
 
-        
-
         const removeAdmin = document.createElement('button');
         removeAdmin.setAttribute('class', 'btn btn-primary');
 
@@ -251,9 +255,6 @@ async function showGroupParticipants(id){
 
         const addToButton = document.createElement('button');
         addToButton.setAttribute('class', 'btn btn-primary');
-
-        
-        
 
         const isParticipant = await axios.get(`/group/checkGroupUser?groupId=${id}&userId=${user.id}`);
         if(isParticipant.data){

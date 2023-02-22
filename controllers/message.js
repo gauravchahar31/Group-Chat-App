@@ -44,8 +44,7 @@ exports.getGroupMessages = async(req, res) => {
         const groupMessages = await Message.findAll({
             where: {
                 chatGroupId: req.params.groupId
-            },
-            limit: 10
+            }
         })
         const data = {
             groupMessages,
@@ -66,6 +65,7 @@ exports.newGroupMessage =  async(req, res) => {
             message: req.body.message,
             chatGroupId: req.body.chatGroupId
         });
+        res.status(200).json(null);
     }
     catch(err){
         console.log(err);
@@ -76,17 +76,7 @@ exports.newGroupMessage =  async(req, res) => {
 exports.saveFile = async (req, res) => {
     try{
         console.log(req.body);
-        // const file = req.body.file[0];
-        // const fileName = `file${req.user.id}${new Date()}`;
-        // const fileURL = await saveFileToS3(file, fileName);
-        // console.log(fileURL);
-        // res.status(200).send(fileURL);
-
-        // await req.user.createMessage({
-        //     name: req.user.name,
-        //     message: fileURL,
-        //     chatGroupId: req.body.groupId
-        // });
+        res.status(500).send('Unsuccessful');
     }
     catch(err){
         console.log(err);

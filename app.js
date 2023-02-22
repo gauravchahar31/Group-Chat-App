@@ -2,7 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const app = express();
+const app = express()
+const server = require('http').createServer(app)
+
+const io = require('socket.io')(server);
+io.on('connection', socket => {
+    socket.on('send-message', room => {
+        io.emit('receive-message', room);
+    });
+})
 
 app.use(cors());
 app.use(express.static('views'));
@@ -49,6 +57,4 @@ Group.hasMany(Message);
 
 sequelize.sync();
 
-app.listen(process.env.PORT_NUMBER, () => {
-    console.log(`Server started running at : ${process.env.PORT_NUMBER}`);
-});
+server.listen(3000);
