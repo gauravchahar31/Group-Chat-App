@@ -182,7 +182,7 @@ async function fetchMessages(id){
     socket.on('receive-message', async (group) => {
         if(group == id){
             console.log(lastMessageId);
-            fetchNewMessages(id, groupMessagesBox, userId);
+            await fetchNewMessages(id, groupMessagesBox, userId);
         }
     })
 }
@@ -216,6 +216,7 @@ async function fetchNewMessages(id, groupMessagesBox, userId){
         })
         lastMessageId = newMessages[newMessages.length-1].id;
     }
+    return;
 }
 
 //SHOWS GROUP PATICIPANTS IN MODAL OF ADMIN
