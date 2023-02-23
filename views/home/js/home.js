@@ -109,13 +109,13 @@ async function showGroup(id, name){
     const horizontalLine = document.createElement('hr');
     groupChatHeader.appendChild(horizontalLine);
     document.querySelector('.welcomeMessage').setAttribute('style', 'display: none');
-    const groupMessagesBox = document.querySelector('.groupMessagesBox');
-    groupMessagesBox.innerHTML = '';
     createGroupChatScreen(id);
 }
 
 //SHOWS MESSAGE SCREEN
 async function createGroupChatScreen(id){
+    const groupMessagesBox = document.querySelector('.groupMessagesBox');
+    groupMessagesBox.innerHTML = '';
     const chatPanel = document.querySelector('.chatPanel');
     chatPanel.setAttribute('style', 'margin-left: 10px; display: block;') 
     const formGroupId=  document.querySelector('#currentGroupId');
